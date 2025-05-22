@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import globals from 'globals';
 import { defineConfig } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import eslintPluginJest from 'eslint-plugin-jest';
 
 export default defineConfig([
   js.configs.recommended,
@@ -16,7 +17,7 @@ export default defineConfig([
   },
 
   {
-    files: ['src/*.js'],
+    files: ['src/**.js', 'src/**/*.js'],
     rules: {
       semi: 'warn',
       'prefer-const': 'error',
@@ -25,4 +26,18 @@ export default defineConfig([
     },
   },
   eslintConfigPrettier,
+  {
+    files: ['**/*.test.js', '**/*.spec.js'],
+    languageOptions: {
+      globals: {
+        ...eslintPluginJest.environments.globals.globals,
+      },
+    },
+    plugins: {
+      jest: eslintPluginJest,
+    },
+    rules: {
+      ...eslintPluginJest.configs.recommended.rules,
+    },
+  },
 ]);
