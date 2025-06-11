@@ -1,46 +1,50 @@
-h1 {
-  color: red;
+@font-face {
+  font-family: 'bf_modernistaregular';
+  src:
+    url('./font/bf_modernista-regular-webfont.woff2') format('woff2'),
+    url('./font/bf_modernista-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
-.board-wrapper {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
-  width: 500px;
-  height: 500px;
-  position: relative;
+@font-face {
+  font-family: 'bf_modernistabold';
+  src:
+    url('./font/bf_modernista-bold-webfont.woff2') format('woff2'),
+    url('./font/bf_modernista-bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
-.board-wrapper div {
-  background: rgb(224, 224, 224);
-  border: 1px solid black;
+:root {
+  --main-bg-color: rgb(135, 206, 235);
+  --secondary-bg-color: rgb(70, 150, 255);
+  --main-text-color: rgb(255, 255, 255);
+  --main-header-text-size: 1.8rem;
+  --secondary-header-text-size: 1.3rem;
+  --card-hover-bg: var(--secondary-bg-color);
+  --card-selected-border: 3px solid rgb(0, 215, 61);
+  --button-hover-bg: rgb(0, 85, 197);
+  --placeship-hover-bg: rgba(0, 255, 64, 0.5);
+  --board-cover-bg: rgba(148, 148, 148, 0.8);
+  --cell-bg-color: rgb(0, 157, 255);
+  --cell-attack-hover-bg: rgb(70, 202, 255);
+  --playership-bg-color: var(--placeship-hover-bg);
 }
 
-.player-board-cell.setup-hover {
-  background-color: lightblue;
+body {
+  background: content-box
+    radial-gradient(var(--main-bg-color), var(--secondary-bg-color));
+  background-attachment: fixed;
+  font-family: 'bf_modernistabold';
+  color: var(--main-text-color);
+  max-width: 85vw;
+  margin: 0 auto 50px;
 }
 
-.selected {
-  border: 2px solid green;
-}
-
-.hide {
-  display: none;
-}
-
-.battlefield-wrapper {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 100px auto;
-}
-
-.turn-messages {
-  grid-area: 1/1/2/3;
-}
-.cover.enemy {
-  display: none;
-  position: absolute;
-  top: 0;
-  width: 500px;
-  height: 500px;
+header {
+  display: flex;
+  justify-content: center;
+  font-size: var(--main-header-text-size);
+  padding: 25px;
 }
