@@ -1,0 +1,66 @@
+.content .battlefield-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 135px auto;
+  justify-content: center;
+}
+
+.turn-messages {
+  grid-area: 1/1/2/3;
+  text-align: center;
+  font-size: var(--secondary-header-text-size);
+}
+
+.battlefield-wrapper .board-wrapper {
+  width: 500px;
+  height: 500px;
+  position: relative;
+  justify-self: center;
+}
+
+.enemy-board-cell,
+.player-board-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--cell-bg-color);
+}
+
+.battlefield-wrapper .board-wrapper .enemy-board-cell:hover {
+  background-color: var(--cell-attack-hover-bg);
+}
+
+img.hit,
+img.miss {
+  width: 40px;
+}
+
+.board-wrapper div.player-ship {
+  background-color: var(--playership-bg-color);
+}
+
+.cover {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  background-color: var(--board-cover-bg);
+}
+
+.cover .loading {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 7px solid;
+  border-color: #000 #0000;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
