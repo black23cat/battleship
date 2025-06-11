@@ -1,3 +1,6 @@
+import hitIcon from '../icons/battleship-hit-icon.png';
+import missIcon from '../icons/battleship-miss-icon.png';
+
 export default function ScreenDisplay() {
   const content = document.querySelector('.content');
 
@@ -9,21 +12,24 @@ export default function ScreenDisplay() {
     clearContentChild();
     const setupMenuWrapper = document.createElement('div');
     const playerShipDataWrapper = document.createElement('div');
-    const setUpBoardWrapper = document.createElement('div');
+    const setupHeader = document.createElement('h3');
     const setupBoard = renderPlayerBoard(board);
     setupMenuWrapper.classList.add('setup-menu');
     playerShipDataWrapper.classList.add('ship-data-wrapper');
-    setUpBoardWrapper.classList.add('setup-board-wrapper');
-    setupBoard.classList.add('setup-board');
+    setupHeader.classList.add('player-fleets');
+    setupHeader.textContent = "Player Fleet's";
+    playerShipDataWrapper.appendChild(setupHeader);
     for (let i = 0; i < ships.length; i++) {
       const shipName = ships[i].name;
       const shipLength = ships[i].shipHp;
+      const wrapper = document.createElement('div');
       const shipDirection = ships[i].direction;
       const shipDiv = document.createElement('div');
       const shipText = document.createElement('h3');
       const shipHp = document.createElement('p');
       const shipDirectionToggle = document.createElement('button');
       const selectShipBtn = document.createElement('button');
+      wrapper.classList.add('ship-name-wrapper');
       shipDiv.classList.add('ship-data');
       shipText.textContent =
         shipName.slice(0, 1).toUpperCase() + shipName.slice(1, shipName.length);
@@ -37,12 +43,11 @@ export default function ScreenDisplay() {
       selectShipBtn.setAttribute('data-ship-name', `${shipName}`);
       selectShipBtn.setAttribute('data-ship-length', `${shipLength}`);
       selectShipBtn.setAttribute('data-ship-direction', `${shipDirection}`);
-
-      shipDiv.append(shipText, shipHp, shipDirectionToggle, selectShipBtn);
+      wrapper.append(shipText, shipHp);
+      shipDiv.append(wrapper, shipDirectionToggle, selectShipBtn);
       playerShipDataWrapper.appendChild(shipDiv);
     }
-    setUpBoardWrapper.appendChild(setupBoard);
-    setupMenuWrapper.append(playerShipDataWrapper, setUpBoardWrapper);
+    setupMenuWrapper.append(playerShipDataWrapper, setupBoard);
     content.appendChild(setupMenuWrapper);
   }
 
@@ -85,17 +90,17 @@ export default function ScreenDisplay() {
 
   function renderPlayerBoard(playerBoard) {
     const wrapper = document.createElement('div');
-    wrapper.classList.add('player-board-wrapper');
+    wrapper.classList.add('board-wrapper');
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         const currentCellData = playerBoard.getBoardCell(i, j);
         const cell = document.createElement('div');
         cell.classList.add('player-board-cell');
-        cell.setAttribute('id', `player-${i}-${j}`);
         cell.setAttribute('data-row', i);
         cell.setAttribute('data-col', j);
         if (currentCellData.hasShip()) {
           cell.classList.add('player-ship');
+          cell.classList.add(`${currentCellData.getShipName()}`);
         }
         wrapper.appendChild(cell);
       }
@@ -103,25 +108,21 @@ export default function ScreenDisplay() {
     return wrapper;
   }
 
-  function renderEnemyBoard(board) {
+  function renderEnemyBoard() {
     const wrapper = document.createElement('div');
     const boardCover = document.createElement('div');
     const loading = document.createElement('div');
     loading.classList.add('loading');
-    wrapper.classList.add('enemy-board-wrapper');
+    wrapper.classList.add('board-wrapper');
     boardCover.setAttribute('class', 'cover enemy');
     boardCover.appendChild(loading);
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
-        const currentCellData = board.getBoardCell(i, j);
         const cell = document.createElement('div');
         cell.classList.add('enemy-board-cell');
         cell.setAttribute('id', `${i}-${j}`);
         cell.setAttribute('data-row', i);
         cell.setAttribute('data-col', j);
-        if (currentCellData.hasShip()) {
-          cell.classList.add('enemy-ship');
-        }
         wrapper.appendChild(cell);
       }
     }
@@ -144,6 +145,10 @@ export default function ScreenDisplay() {
     });
   }
 
+  function detachCellEventListener(callback) {
+    removeEventListener('.enemy-board-cell', 'click', callback, { once: true });
+  }
+
   function removeEventListener(selector, type, callback, options = {}) {
     const elements = document.querySelectorAll(selector);
     elements.forEach(element => {
@@ -151,11 +156,11 @@ export default function ScreenDisplay() {
     });
   }
 
-  function renderBattleScreen(board1, board2) {
+  function renderBattleScreen(board) {
     clearContentChild();
     const battlefieldWrapper = document.createElement('div');
     const turnMessagesWrapper = document.createElement('div');
-    const messages = document.createElement('h4');
+    const messages = document.createElement('h3');
     turnMessagesWrapper.classList.add('turn-messages');
     messages.classList.add('messages');
     messages.textContent = `Player One's turn.`;
@@ -163,8 +168,8 @@ export default function ScreenDisplay() {
     turnMessagesWrapper.appendChild(messages);
     battlefieldWrapper.append(
       turnMessagesWrapper,
-      renderPlayerBoard(board1),
-      renderEnemyBoard(board2),
+      renderPlayerBoard(board),
+      renderEnemyBoard(),
     );
     content.appendChild(battlefieldWrapper);
   }
@@ -173,7 +178,6 @@ export default function ScreenDisplay() {
     content.replaceChildren();
   }
 
-  // TODO: REFACTOR TO HAVE SPLIT FUNCTION TO UPDATE PLAYER BOARD AND COMPUTER BOARD SEPARATELY
   function updateBoardDisplay(
     isWinner,
     hitStatus,
@@ -181,17 +185,22 @@ export default function ScreenDisplay() {
     col,
     player = 'player',
   ) {
+    const image = document.createElement('img');
     let target;
     updateTurnMessages(isWinner);
     if (player === 'com') {
-      target = document.getElementById(`player-${row}-${col}`);
+      target = document.querySelector(`[data-row='${row}'][data-col='${col}']`);
     } else {
       target = document.getElementById(`${row}-${col}`);
     }
     if (hitStatus) {
-      target.classList.add('hit');
+      image.src = hitIcon;
+      image.classList.add('hit');
+      target.appendChild(image);
     } else {
-      target.classList.add('miss');
+      image.src = missIcon;
+      image.classList.add('miss');
+      target.appendChild(image);
     }
   }
 
@@ -233,6 +242,7 @@ export default function ScreenDisplay() {
     initialize,
     attachEventListener,
     detachSetupEventListener,
+    detachCellEventListener,
     updateDirectionToggleButton,
     updateSetupBoardDisplay,
     renderConfirmBtn,

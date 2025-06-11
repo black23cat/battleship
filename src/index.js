@@ -1,7 +1,4 @@
-// import './styles.css';
+import './styles.css';
+import initialize from './modules/main.js';
 
-function Log(msg) {
-  return msg;
-}
-
-export default Log;
+initialize();

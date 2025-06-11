@@ -1,3 +1,46 @@
 h1 {
   color: red;
 }
+
+.board-wrapper {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  width: 500px;
+  height: 500px;
+  position: relative;
+}
+
+.board-wrapper div {
+  background: rgb(224, 224, 224);
+  border: 1px solid black;
+}
+
+.player-board-cell.setup-hover {
+  background-color: lightblue;
+}
+
+.selected {
+  border: 2px solid green;
+}
+
+.hide {
+  display: none;
+}
+
+.battlefield-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 100px auto;
+}
+
+.turn-messages {
+  grid-area: 1/1/2/3;
+}
+.cover.enemy {
+  display: none;
+  position: absolute;
+  top: 0;
+  width: 500px;
+  height: 500px;
+}
